@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <script src="./bower_components/angular/angular.js"></script>
+  </head>
+  <body>
+
+    <div ng-controller="controller1">
+      <input type="text" ng-model="data"/>
+      <!-- <p ng-bind="data"></p> -->
+    </div>
+    <div ng-controller="controller2">
+      <!-- <input type="text" ng-model="data"/> -->
+      <p ng-bind="data"></p>
+    </div>
+
+    <!-- <div ng-app="myApp">
+      <div ng-controller="CtrlA">
+          <input ng-model="fromServiceIn1.foo"/>
+          <p>{{fromServiceIn1.foo}}</p>
+      </div>
+      <div ng-controller="CtrlB">
+          <p>{{ fromServiceIn2.foo}}</p>
+      </div>
+    </div> -->
+
+    <script type="text/javascript">
+
+      // angular.module("myApp",[])
+      //
+      // .service('myServ',
+      // function (){
+      //     return {foo:"bar"};
+      // })
+      //
+      // .controller('CtrlA',function ($scope, myServ) {
+      //   $scope.fromServiceIn1 = myServ;
+      // })
+      //
+      // .controller('CtrlB',function ($scope, myServ){
+      //   $scope.fromServiceIn2=myServ;
+      // });
+
+      // var myApp = angular.module('myApp', [])
+      //   .controller('controller1', ['$rootScope', '$scope', 'myService', function($rootScope, $scope, myService){
+      //     $scope.datas = myService;
+      //   }])
+      //   .controller('controller2', ['$rootScope', '$scope', 'myService', function($rootScope, $scope, myService){
+      //     $scope.datas = myService;
+      //   }])
+      //   .service('myService', function(){
+      //     // var x = 1;
+      //     return {x: 1};
+      //   })
+
+        var myApp = angular.module('myApp', [])
+          .controller('controller1', ['$rootScope', '$scope', 'myService', function($rootScope, $scope, myService){
+            $scope.data;
+
+            $scope.$watch("data", function(newValue, oldValue){
+              $rootScope.$broadcast("dataUpdated", {arrivingData: newValue});
+            })
+          }])
+          .controller('controller2', ['$rootScope', '$scope', 'myService', function($rootScope, $scope, myService){
+            $scope.data;
+
+            $scope.$on("dataUpdated", function(event, args){
+              $scope.data = args.arrivingData;
+            })
+          }])
+          .service('myService', function(){
+            // var x = 1;
+            return {x: 1};
+          })
+    </script>
+
+  </body>
+</html>
